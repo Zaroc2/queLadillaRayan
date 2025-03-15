@@ -395,6 +395,7 @@ bool confuenceNextToEnergetic(Vertice* graph, int graphWeight) {
 				if(edge->payload.end->name != 'B'){
 					return false;
 				}
+				edge = edge->next;
 			}
 			return true;
 		}
@@ -434,6 +435,23 @@ bool hasLessThan3Runes(Vertice* graph, int graphWeight) {
 	}
 
 	return numberOfRunes <= 3;
+}
+// ART. 4 - si retorna true se cumple el articulo
+bool cataliticIsNotNextToElemental(Vertice* graph, int graphWeight) {
+	for(int i = 0; i < graphWeight; i++){
+		if(graph[i].name == 'D'){
+			auto edge = graph[i].adyacentVertices.getFirst();
+			while(edge != nullptr){
+				char edgeName = edge->payload.end->name;
+				if(edgeName == 'I' || edgeName == 'Q' || edgeName == 'T' || edgeName == 'V' || edgeName == 'L' || edgeName == 'O'){
+					return false;
+				}
+				edge = edge->next;
+			}
+			return true;
+		}
+	}
+	return true;
 }
 
 int main() {
