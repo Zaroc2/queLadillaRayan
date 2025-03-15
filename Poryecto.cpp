@@ -242,6 +242,7 @@ class Hechicero{
 	public:
 	string name;
 	bool underInvestigation;
+	List<int> spells; //los hechizos que hizo este :p
 
 	Hechicero(){
 	}
@@ -314,6 +315,8 @@ void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int
 		getline(spellList, inputString);
 
 		wizards.add(Hechicero(inputString, false));
+		wizards.getLast()->payload.spells.add(i);
+
 		spellList>>graphSizes[i];
 		spellList>>inputString;
 
@@ -361,7 +364,12 @@ int main() {
 
 	readFile(graphs, graphSizes, wizards, graphAmount);
 
-	for (Node<Hechicero>* i = wizards.getFirst(); i != nullptr; i = i->next) cout<<i->payload.name<<' '<<i->payload.underInvestigation<<endl;
+	for (Node<Hechicero>* i = wizards.getFirst(); i != nullptr; i = i->next){
+		cout<<i->payload.name<<' '<<i->payload.underInvestigation<<endl;
+		for (Node<int>* j = i->payload.spells.getFirst(); j != nullptr; j = j->next) cout<<j->payload<<' ';
+
+		cout<<endl;
+	}
 
 	for (int i = 0; i < graphAmount; i++) delete[] graphs[i];
 	delete[] graphs;
