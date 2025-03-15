@@ -454,6 +454,146 @@ bool cataliticIsNotNextToElemental(Vertice* graph, int graphWeight) {
 	return true;
 }
 
+void saveToFile(Hechizo *hechizos,int graphAmount,List<Hechicero> &hechiceros){
+	
+	//Abrimos el archivo para los hechizos
+	fstream file;
+	file.open("processedSpells.out", ios::out);
+	
+	if(!file.is_open()){
+		cout<<"Error al abrir archivo"<<endl;
+		exit(1);
+	}
+	
+	file<<"Hechizos Legales"<<endl<<endl;
+	
+	for(int i=0; i<graphAmount; i++){
+		if(!hechizos[i].illegal){
+			for(int j=0;j<hechizos[i].graphSize;j++){	
+				switch(hechizos[i].graph[j].name){
+					case 'I'://Fuego
+						file<<"Ignatum ";
+						break;
+					case 'Q'://Agua
+						file<<"Aquos ";
+						break;
+						
+					case 'T'://Tierra
+						file<<"Terraminium ";
+						break;
+					case 'V'://Aire
+						file<<"Ventus ";
+						break;
+					case 'L'://Luz
+						file<<"Lux ";
+						break;
+					case 'O'://Oscuridad
+						file<<"Tenebrae ";
+						break;
+				}
+				
+				if(hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'a' || hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'e' 
+				|| hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'i' || hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'o'
+				|| hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'u'){
+					
+						
+					string spellName = hechizos[i].wizardName.substr(0,hechizos[i].wizardName.size()-1);
+					spellName += "ium";
+					
+					file<<spellName;
+				}else{
+					string spellName = hechizos[i].wizardName + "um";	
+					file<<spellName;
+				}
+				
+				//Falta la comporbación final de lo del modicum/maximos/arcanus
+				
+				file<<endl<<hechizos[i].wizardName<<endl<<endl;
+				
+				
+			}
+		}
+		
+	}
+	
+	file<<"Hechizos Ilegales"<<endl<<endl;
+	
+	for(int i=0; i<graphAmount; i++){
+		
+		if(hechizos[i].illegal){
+			for(int j=0;j<hechizos[i].graphSize;j++){	
+				switch(hechizos[i].graph[j].name){
+					case 'I'://Fuego
+						file<<"Ignatum ";
+						break;
+					case 'Q'://Agua
+						file<<"Aquos ";
+						break;
+						
+					case 'T'://Tierra
+						file<<"Terraminium ";
+						break;
+					case 'V'://Aire
+						file<<"Ventus ";
+						break;
+					case 'L'://Luz
+						file<<"Lux ";
+						break;
+					case 'O'://Oscuridad
+						file<<"Tenebrae ";
+						break;
+				}
+				
+				if(hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'a' || hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'e' 
+				|| hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'i' || hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'o'
+				|| hechizos[i].wizardName[hechizos[i].wizardName.size()-1] == 'u'){
+					
+						
+					string spellName = hechizos[i].wizardName.substr(0,hechizos[i].wizardName.size()-1);
+					spellName += "ium";
+					
+					file<<spellName;
+				}else{
+					string spellName = hechizos[i].wizardName + "um";	
+					file<<spellName;
+				}
+				
+				//Falta la comporbación final de lo del modicum/maximos/arcanus
+				
+				file<<endl<<hechizos[i].wizardName<<endl<<endl;
+				
+				
+			}
+		}
+	}
+	
+	
+	file.close();
+	file.open("underInvestigation.in",ios::out);
+
+	
+	if(!file.is_open()){
+		cout<<"Error al abrir archivo"<<endl;
+		exit(1);
+	}
+		
+	
+	Node<Hechicero> *aux = hechiceros.getFirst();
+	
+	while(aux != NULL){
+		
+		file<<aux->payload.name<<endl;
+		
+		aux = aux->next;
+	}
+	
+	
+	
+	//
+	
+	
+}
+
 int main() {
 	Hechizo* graphs;
 	int* graphSizes;
