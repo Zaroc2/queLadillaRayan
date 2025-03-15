@@ -238,6 +238,19 @@ class Vertice{
     }
 };
 
+class Hechicero{
+	public:
+	string name;
+	bool underInvestigation;
+
+	Hechicero(){
+	}
+	Hechicero(string _name, bool _underInvestigation){
+		name = _name;
+		underInvestigation = _underInvestigation;
+	}
+};
+
 Vertice* findBigger(Vertice* graph, int graphWeight){
     int max = -1;
     Vertice* smaller = nullptr;
@@ -281,12 +294,13 @@ float dijkstra(Vertice* graph, int graphWeight ){
     return maxWeight;
 }
 
-void readFile(Vertice** &graphs, int* &graphSizes, string* &wizardNames, List<string> &wizardsUnderInvestigation, int &graphAmount){
+void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int &graphAmount){
 	ifstream spellList("spellList.in");
 	ifstream underInvestigation("underInvestigation.in");
 	string inputString;
 	int edgeAmount, vA, vB;
 	float weight;
+	bool found;
 
 	if (!spellList.is_open() || !underInvestigation.is_open()) exit(1);
 
@@ -294,13 +308,12 @@ void readFile(Vertice** &graphs, int* &graphSizes, string* &wizardNames, List<st
 
 	graphs = new Vertice*[graphAmount];
 	graphSizes = new int[graphAmount];
-	wizardNames = new string[graphAmount];
 
 	for (int i = 0; i < graphAmount; i++){
 		getline(spellList, inputString);
 		getline(spellList, inputString);
 
-		wizardNames[i] = inputString;
+		wizards.add(Hechicero(inputString, false));
 		spellList>>graphSizes[i];
 		spellList>>inputString;
 
@@ -322,7 +335,18 @@ void readFile(Vertice** &graphs, int* &graphSizes, string* &wizardNames, List<st
 
 	while (!underInvestigation.eof()){
 		getline(underInvestigation, inputString);
-		wizardsUnderInvestigation.add(inputString);
+
+		found = false;
+
+		for (Node<Hechicero>* i = wizards.getFirst(); i != nullptr; i = i->next){
+			if (i->payload.name == inputString){
+				i->payload.underInvestigation = true;
+				found = true;
+				break;
+			}
+		}
+
+		if (!found) wizards.add(Hechicero(inputString, true));
 	}
 
 	spellList.close();
@@ -332,16 +356,16 @@ void readFile(Vertice** &graphs, int* &graphSizes, string* &wizardNames, List<st
 int main() {
 	Vertice** graphs;
 	int* graphSizes;
-	string* wizardNames;
-	List<string> wizardsUnderInvestigation;
+	List<Hechicero> wizards;
 	int graphAmount;
 
-	readFile(graphs, graphSizes, wizardNames, wizardsUnderInvestigation, graphAmount);
+	readFile(graphs, graphSizes, wizards, graphAmount);
+
+	for (Node<Hechicero>* i = wizards.getFirst(); i != nullptr; i = i->next) cout<<i->payload.name<<' '<<i->payload.underInvestigation<<endl;
 
 	for (int i = 0; i < graphAmount; i++) delete[] graphs[i];
 	delete[] graphs;
 	delete[] graphSizes;
-	delete[] wizardNames;
 
     return 0;
 }
