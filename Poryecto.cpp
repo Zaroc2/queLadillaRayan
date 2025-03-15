@@ -369,6 +369,73 @@ void readFile(Hechizo* &graphs, int* &graphSizes, List<Hechicero> &wizards, int 
 	underInvestigation.close();
 }
 
+// ART. 1
+bool hasOnlyOneConfluencePoint(Vertice* graph, int graphWeight){
+	bool hasConfluence = false;
+	for(int i = 0; i < graphWeight; i++){
+		if(graph[i].name == 'A'){
+			if(hasConfluence) return false;
+			else hasConfluence = true;
+		}
+	}
+
+	return hasConfluence;
+}
+
+// ART. 2
+bool confuenceNextToEnergetic(Vertice* graph, int graphWeight) {
+	for(int i = 0; i < graphWeight; i++){
+		// encuentra el nodo 'A' - nodo de confluencia
+		if(graph[i].name == 'A'){
+			auto edges = graph[i].adyacentVertices;
+			auto edge = edges.getFirst();
+			// recorre todas las aristas
+			while(edge != nullptr){
+				// si no son energeticos - 'B' retorna falso
+				if(edge->payload.end->name != 'B'){
+					return false;
+				}
+			}
+			return true;
+		}
+	}
+	return true;
+}
+
+// ART. 3
+bool hasLessThan3Runes(Vertice* graph, int graphWeight) {
+	int rune[6] = {0,0,0,0,0,0};
+
+	for(int i = 0; i < graphWeight; i++) {
+		switch (graph[i].name) {
+		case 'I':
+			rune[0]=1;
+			break;
+		case 'Q':
+			rune[1]=1;
+			break;
+		case 'T':
+			rune[2]=1;
+			break;
+		case 'V':
+			rune[3]=1;
+			break;
+		case 'L':
+			rune[4]=1;
+			break;
+		case 'O':
+			rune[5]=1;
+			break;
+		}
+	}
+	int numberOfRunes = 0;
+	for(int i = 0; i < 6; i++){
+		numberOfRunes += rune[i];
+	}
+
+	return numberOfRunes <= 3;
+}
+
 int main() {
 	Hechizo* graphs;
 	int* graphSizes;
