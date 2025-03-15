@@ -252,6 +252,18 @@ class Hechicero{
 	}
 };
 
+class Hechizo{
+	public:
+	Vertice* graph;
+	bool illegal;
+	string wizardName;
+
+	Hechizo(){}
+	~Hechizo(){
+		delete[] graph;
+	}
+};
+
 Vertice* findBigger(Vertice* graph, int graphWeight){
     int max = -1;
     Vertice* smaller = nullptr;
@@ -295,7 +307,7 @@ float dijkstra(Vertice* graph, int graphWeight ){
     return maxWeight;
 }
 
-void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int &graphAmount){
+void readFile(Hechizo* &graphs, int* &graphSizes, List<Hechicero> &wizards, int &graphAmount){
 	ifstream spellList("spellList.in");
 	ifstream underInvestigation("underInvestigation.in");
 	string inputString;
@@ -307,7 +319,7 @@ void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int
 
 	spellList>>graphAmount;
 
-	graphs = new Vertice*[graphAmount];
+	graphs = new Hechizo[graphAmount];
 	graphSizes = new int[graphAmount];
 
 	for (int i = 0; i < graphAmount; i++){
@@ -316,13 +328,14 @@ void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int
 
 		wizards.add(Hechicero(inputString, false));
 		wizards.getLast()->payload.spells.add(i);
+		graphs[i].wizardName = inputString;
 
 		spellList>>graphSizes[i];
 		spellList>>inputString;
 
-		graphs[i] = new Vertice[graphSizes[i]];
+		graphs[i].graph = new Vertice[graphSizes[i]];
 
-		for (int j = 0; j < graphSizes[i]; j++) graphs[i][j] = Vertice(inputString[j]);
+		for (int j = 0; j < graphSizes[i]; j++) graphs[i].graph[j] = Vertice(inputString[j]);
 
 		spellList>>edgeAmount;
 		
@@ -331,8 +344,8 @@ void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int
 
 			--vA; --vB;
 
-			graphs[i][vA].saveAdyacent(&graphs[i][vB], weight);
-			graphs[i][vB].saveAdyacent(&graphs[i][vA], weight);	
+			graphs[i].graph[vA].saveAdyacent(&graphs[i].graph[vB], weight);
+			graphs[i].graph[vB].saveAdyacent(&graphs[i].graph[vA], weight);	
 		}
 	}
 
@@ -357,7 +370,7 @@ void readFile(Vertice** &graphs, int* &graphSizes, List<Hechicero> &wizards, int
 }
 
 int main() {
-	Vertice** graphs;
+	Hechizo* graphs;
 	int* graphSizes;
 	List<Hechicero> wizards;
 	int graphAmount;
@@ -367,11 +380,9 @@ int main() {
 	for (Node<Hechicero>* i = wizards.getFirst(); i != nullptr; i = i->next){
 		cout<<i->payload.name<<' '<<i->payload.underInvestigation<<endl;
 		for (Node<int>* j = i->payload.spells.getFirst(); j != nullptr; j = j->next) cout<<j->payload<<' ';
-
 		cout<<endl;
 	}
 
-	for (int i = 0; i < graphAmount; i++) delete[] graphs[i];
 	delete[] graphs;
 	delete[] graphSizes;
 
